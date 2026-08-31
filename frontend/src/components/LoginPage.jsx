@@ -2,13 +2,16 @@ import { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../utils/authSlice";
-import { redirect } from "react-router"; 
+import { useNavigate } from "react-router"; 
 
 const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error,setError] = useState("")
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -24,9 +27,10 @@ const LoginPage = () => {
       });
       const finalData = data.data;
       dispatch(login(finalData.accessToken));
-      redirect("/students")
+      navigate("/students")
 
     } catch (err) {
+      setError(err)
       console.log(err);
     }
   }
@@ -36,6 +40,7 @@ const LoginPage = () => {
         <h2 className="text-3xl font-bold mb-4 text-center text-red-600">
           Login
         </h2>
+
         <form >
           <div className="mb-4">
             <label className="text-red-600 font-bold">Email</label>
@@ -59,6 +64,7 @@ const LoginPage = () => {
               }}
             />
           </div>
+          {error && <p className="text-red-600">Invalid Crendials</p>}
           <div className="pt-2 mt-8">
             <button
               className="w-full  py-2 px-4  bg-orange-600 hover:bg-orange-700 cursor-pointer text-white font-bold rounded-md"
