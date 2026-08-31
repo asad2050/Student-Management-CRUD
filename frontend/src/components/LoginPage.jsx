@@ -2,6 +2,9 @@ import { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../utils/authSlice";
+import { redirect } from "react-router"; 
+
+const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,12 +18,14 @@ const LoginPage = () => {
       return
     }
     try {
-      const data = await axios.post("http://127.0.0.1:8000/api/login", {
+      const data = await axios.post(`${API_URL}/login`, {
         email,
         password,
       });
       const finalData = data.data;
       dispatch(login(finalData.accessToken));
+      redirect("/students")
+
     } catch (err) {
       console.log(err);
     }
