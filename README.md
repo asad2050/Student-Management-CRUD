@@ -109,7 +109,7 @@ The frontend will be running at `http://localhost:5173` (default Vite port).
 
 You need **two separate terminal windows** — one for the backend and one for the frontend.
 
- Terminal 1 (Backend)  `cd backend && npm start` 
+ Terminal 1 (Backend)  `cd backend && npm start` | 
  Terminal 2 (Frontend) `cd frontend && npm run dev`
 
 ---
