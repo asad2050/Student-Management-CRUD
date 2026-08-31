@@ -5,7 +5,8 @@ import App from "./App.jsx";
 import LoginPage from "./components/LoginPage.jsx";
 import StudentsPage from "./components/StudentsPage.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-
+import { Provider } from "react-redux";
+import appStore from "./utils/appStore.js";
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -31,5 +32,7 @@ const appRouter = createBrowserRouter([
   },
 ]);
 createRoot(document.getElementById("root")).render(
-  <RouterProvider router={appRouter}></RouterProvider>
+  <Provider store={appStore}>
+    <RouterProvider router={appRouter}></RouterProvider>
+  </Provider>
 );

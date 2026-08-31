@@ -1,9 +1,11 @@
 import React from 'react'
-
-const ProtectedRoutes = () => {
+import { useSelector } from 'react-redux'
+const ProtectedRoute = () => {
+  const token = useSelector((store)=>store.auth.token)
+  console.log(token)
   return (
-    <div>ProtectedRoutes</div>
+    <div>ProtectedRoute</div>
   )
 }
 
-export default ProtectedRoutes
+export default ProtectedRoute

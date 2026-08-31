@@ -27,7 +27,7 @@ module.exports = {
         name: "Rahul Mishra",
       },
       {
-        email: "priya.teacher@email.com",
+        email: "priya@email.com",
         password: hashedPassword,
         name: "Priya Mehra",
       },
