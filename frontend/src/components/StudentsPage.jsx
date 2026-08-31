@@ -1,9 +1,12 @@
 import React from 'react'
+import StudentList from './StudentList'
 
-const StudentPage = () => {
+const StudentsPage = () => {
   return (
-    <div>StudentPage</div>
+    <div><h2> Manage Students</h2>
+    <StudentList/>
+    </div>
   )
 }
 
-export default StudentPage
+export default StudentsPage

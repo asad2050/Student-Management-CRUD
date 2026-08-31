@@ -13,6 +13,11 @@ async function getAllStudents(req, res) {
 async function getStudentById(req, res) {
   try {
     let { id } = req.params;
+
+    if (!id || id.length !== 24) {
+      return res.status(400).json("Invalid student ID format");
+    }
+
     let student = await StudentModel.findById(id).populate(
       "created_by",
       "email"
@@ -32,6 +37,10 @@ async function getStudentById(req, res) {
 async function createStudent(req, res) {
   try {
     let { name, email, phone } = req.body;
+
+    if (!name || !email || !phone) {
+      return res.status(400).json("Name, email, and phone are required");
+    }
 
     let existingStudent = await StudentModel.findOne({ email });
     if (existingStudent) {
@@ -57,6 +66,15 @@ async function createStudent(req, res) {
 async function updateStudent(req, res) {
   try {
     let { id } = req.params;
+    let { name, email, phone } = req.body;
+    
+    if (!id || id.length !== 24) {
+      return res.status(400).json("Invalid student ID format");
+    }
+
+    if (!name || !email || !phone) {
+      return res.status(400).json("No data provided to update");
+    }
 
     let updatedStudent = await StudentModel.findByIdAndUpdate(id, req.body, {
       new: true,
@@ -76,6 +94,10 @@ async function updateStudent(req, res) {
 async function deleteStudent(req, res) {
   try {
     let { id } = req.params;
+
+    if (!id || id.length !== 24) {
+      return res.status(400).json("Invalid student ID format");
+    }
 
     let deletedStudent = await StudentModel.findByIdAndDelete(id);
 

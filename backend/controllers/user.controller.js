@@ -5,6 +5,11 @@ const jwt = require("jsonwebtoken");
 async function register(req,res){
     try{
         let {name,email,password} = req.body;
+
+        if (!name || !email || !password) {
+            return res.status(400).json("Name, email, and password are required");
+          }
+
         let existingUser = await UserModel.findOne({email});
 
         if(existingUser){
@@ -29,6 +34,11 @@ async function register(req,res){
 async function login(req,res){
     try{
         let {email,password} = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json("Email and password are required");
+          }
+          
         let existingUser = await UserModel.findOne({email})
         if(!existingUser){
             return res.status(409).json("User does not exists")
