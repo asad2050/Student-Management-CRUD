@@ -39,7 +39,7 @@ const StudentsPage = () => {
   async function handleSubmit(e) {
     e.preventDefault();
 
-    console.log(formData);
+    // console.log(formData);
     let { name, email, phone } = formData;
     if (!name || !email || !phone) {
       alert("Enter proper details");
@@ -57,6 +57,17 @@ const StudentsPage = () => {
       );
     }
   }
+
+  async function handleDelete(id) {
+    try {
+      await axios.delete(`${STUDENT_API_URL}/${id}`, axiosConfig);
+      setStudents(students.filter((student) => student._id != id));
+    } catch (err) {
+      console.log(err);
+      setError("Failed to delete student.");
+    }
+  }
+
   return (
     <div>
       <h2>Manage Students</h2>
@@ -105,10 +116,11 @@ const StudentsPage = () => {
               <th>Email</th>
               <th>Phone</th>
               <th>Added By</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {students.length === 0 ? (
+            {students.length == 0 ? (
               <tr>
                 <td colSpan="4">No students found.</td>
               </tr>
@@ -119,6 +131,11 @@ const StudentsPage = () => {
                   <td>{student.email}</td>
                   <td>{student.phone}</td>
                   <td>{student.created_by?.name || "Unknown"}</td>
+                  <td>
+                    <button onClick={() => handleDelete(student._id)}>
+                      Delete
+                    </button>
+                  </td>
                 </tr>
               ))
             )}
