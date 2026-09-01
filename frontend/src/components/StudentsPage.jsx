@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { FaUserEdit } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000/api";
 const STUDENT_API_URL = `${API_URL}/students`;
@@ -51,14 +53,21 @@ const StudentsPage = () => {
     try {
       if (editingId) {
         const response = await axios.put(
-          `${STUDENT_API_URL}/${editingId}`,formData,axiosConfig);
+          `${STUDENT_API_URL}/${editingId}`,
+          formData,
+          axiosConfig
+        );
         setStudents(
           students.map((student) =>
             student._id === editingId ? response.data : student
           )
         );
       } else {
-        const response = await axios.post(STUDENT_API_URL,formData,axiosConfig);
+        const response = await axios.post(
+          STUDENT_API_URL,
+          formData,
+          axiosConfig
+        );
         setStudents([...students, response.data]);
       }
       resetForm();
@@ -94,79 +103,118 @@ const StudentsPage = () => {
     setError("");
   }
   return (
-    <div>
-      <h2>Manage Students</h2>
-      {error && <p>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Name</label>
+    <div className="max-w-4xl mx-auto mt-10 p-4">
+      <h2 className="text-2xl font-bold mb-4 text-red-600 text-center">
+        Manage Students
+      </h2>
+
+      {error && (
+        <p className="text-red-700 bg-red-200 border border-red-400 rounded px-3 py-2 mb-4">
+          {typeof error === "string" ? error : JSON.stringify(error)}
+        </p>
+      )}
+
+      <form onSubmit={handleSubmit} className="mb-6 bg-amber-100 p-4 rounded">
+        <h3 className="text-lg font-bold mb-3 text-red-600">
+          {editingId ? "Edit Student" : "Add New Student"}
+        </h3>
+
+        <div className="mb-3">
+          <label className="block mb-1 font-medium text-red-600">Name</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             required
+            className="border border-red-300 rounded px-3 py-2 w-full"
           />
         </div>
-        <div>
-          <label>Email</label>
+        <div className="mb-3">
+          <label className="block mb-1 font-medium text-red-600">Email</label>
           <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
             required
+            className="border border-red-300 rounded px-3 py-2 w-full"
           />
         </div>
-        <div>
-          <label>Phone</label>
+        <div className="mb-3">
+          <label className="block mb-1 font-medium text-red-600">Phone</label>
           <input
             type="text"
             name="phone"
             value={formData.phone}
             onChange={handleChange}
             required
+            className="border border-red-300 rounded px-3 py-2 w-full"
           />
         </div>
-        <button type="submit">
+
+        <button
+          type="submit"
+          className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded mr-2 cursor-pointer"
+        >
           {editingId ? "Update Student" : "Save Student"}
         </button>
         {editingId && (
-          <button type="button" onClick={resetForm}>
+          <button
+            type="button"
+            onClick={resetForm}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded cursor-pointer"
+          >
             Cancel
           </button>
         )}
       </form>
 
       {loading ? (
-        <p>Loading students...</p>
+        <p className="text-red-600 font-bold">Loading students...</p>
       ) : (
-        <table>
+        <table className="w-full border">
           <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone</th>
-              <th>Added By</th>
-              <th>Actions</th>
+            <tr className="bg-amber-100">
+              <th className="border p-2 text-left text-red-600">Name</th>
+              <th className="border p-2 text-left text-red-600">Email</th>
+              <th className="border p-2 text-left text-red-600">Phone</th>
+              <th className="border p-2 text-left text-red-600">Added By</th>
+              <th className="border p-2 text-left text-red-600">Edit</th>
+              <th className="border p-2 text-left text-red-600">Delete</th>
             </tr>
           </thead>
           <tbody>
-            {students.length == 0 ? (
+            {students.length === 0 ? (
               <tr>
-                <td colSpan="4">No students found.</td>
+                <td colSpan="5" className="border p-2 text-center text-red-600">
+                  No students found.
+                </td>
               </tr>
             ) : (
               students.map((student) => (
-                <tr key={student._id}>
-                  <td>{student.name}</td>
-                  <td>{student.email}</td>
-                  <td>{student.phone}</td>
-                  <td>{student.created_by?.name || "Unknown"}</td>
-                  <td>
-                    <button onClick={() => handleEdit(student)}>Edit</button>{" "}
-                    <button onClick={() => handleDelete(student._id)}>
-                      Delete
+                <tr key={student._id} className="bg-amber-100">
+                  <td className="border p-2 text-red-500">{student.name}</td>
+                  <td className="border p-2 text-red-500">{student.email}</td>
+                  <td className="border p-2 text-red-500">{student.phone}</td>
+                  <td className="border p-2 text-red-500">
+                    {student.created_by?.name || "Unknown"}
+                  </td>
+                  <td className="border p-2 text-red-500">
+                    {" "}
+                    <button
+                      onClick={() => handleEdit(student)}
+                      className="cursor-pointer"
+                    >
+                      <FaUserEdit color="blue" />
+                    </button>
+                  </td>
+                  <td className="border p-2 text-red-500">
+                    <button
+                      onClick={() => handleDelete(student._id)}
+                      className="cursor-pointer"
+                    >
+                      <MdDelete color="red" />
                     </button>
                   </td>
                 </tr>
