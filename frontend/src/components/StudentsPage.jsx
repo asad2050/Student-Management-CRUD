@@ -35,17 +35,40 @@ const StudentsPage = () => {
 
   return (
     <div>
-      <h2>Manage Students</h2>
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
-      <ul>
-        {students.map((s) => (
-          <li key={s._id}>
-            {s._id} - {s.name} - {s.email} - {s.phone}
-          </li>
-        ))}
-      </ul>
-    </div>
+    <h2>Manage Students</h2>
+    {error && <p>{error}</p>}
+
+    {loading ? (
+      <p>Loading students...</p>
+    ) : (
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Added By</th>
+          </tr>
+        </thead>
+        <tbody>
+          {students.length === 0 ? (
+            <tr>
+              <td colSpan="4">No students found.</td>
+            </tr>
+          ) : (
+            students.map((student) => (
+              <tr key={student._id}>
+                <td>{student.name}</td>
+                <td>{student.email}</td>
+                <td>{student.phone}</td>
+                <td>{student.created_by?.name || "Unknown"}</td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+    )}
+  </div>
   );
 };
 
