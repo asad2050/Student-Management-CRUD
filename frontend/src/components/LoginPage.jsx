@@ -51,6 +51,7 @@ const LoginPage = () => {
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
+              required
             />
           </div>
           <div>
@@ -62,6 +63,7 @@ const LoginPage = () => {
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
+              required
             />
           </div>
           {error && <p className="text-red-600">Invalid Crendials</p>}
