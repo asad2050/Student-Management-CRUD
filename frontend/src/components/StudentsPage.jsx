@@ -15,6 +15,8 @@ const StudentsPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({ name: "", email: "", phone: "" });
+  const [editingId, setEditingId] = useState(null);
+
   async function fetchStudents() {
     setLoading(true);
     try {
@@ -47,9 +49,19 @@ const StudentsPage = () => {
     }
     setError("");
     try {
-      const response = await axios.post(STUDENT_API_URL, formData, axiosConfig);
-      setStudents([...students, response.data]);
-      setFormData({ name: "", email: "", phone: "" });
+      if (editingId) {
+        const response = await axios.put(
+          `${STUDENT_API_URL}/${editingId}`,formData,axiosConfig);
+        setStudents(
+          students.map((student) =>
+            student._id === editingId ? response.data : student
+          )
+        );
+      } else {
+        const response = await axios.post(STUDENT_API_URL,formData,axiosConfig);
+        setStudents([...students, response.data]);
+      }
+      resetForm();
     } catch (err) {
       // console.log(err);
       setError(
@@ -68,6 +80,19 @@ const StudentsPage = () => {
     }
   }
 
+  function handleEdit(student) {
+    setEditingId(student._id);
+    setFormData({
+      name: student.name,
+      email: student.email,
+      phone: student.phone,
+    });
+  }
+  function resetForm() {
+    setFormData({ name: "", email: "", phone: "" });
+    setEditingId(null);
+    setError("");
+  }
   return (
     <div>
       <h2>Manage Students</h2>
@@ -80,7 +105,7 @@ const StudentsPage = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            // required
+            required
           />
         </div>
         <div>
@@ -90,7 +115,7 @@ const StudentsPage = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            // required
+            required
           />
         </div>
         <div>
@@ -100,10 +125,17 @@ const StudentsPage = () => {
             name="phone"
             value={formData.phone}
             onChange={handleChange}
-            // required
+            required
           />
         </div>
-        <button type="submit">Save Student</button>
+        <button type="submit">
+          {editingId ? "Update Student" : "Save Student"}
+        </button>
+        {editingId && (
+          <button type="button" onClick={resetForm}>
+            Cancel
+          </button>
+        )}
       </form>
 
       {loading ? (
@@ -132,6 +164,7 @@ const StudentsPage = () => {
                   <td>{student.phone}</td>
                   <td>{student.created_by?.name || "Unknown"}</td>
                   <td>
+                    <button onClick={() => handleEdit(student)}>Edit</button>{" "}
                     <button onClick={() => handleDelete(student._id)}>
                       Delete
                     </button>
